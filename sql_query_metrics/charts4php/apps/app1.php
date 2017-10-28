@@ -1,12 +1,6 @@
 <!DOCTYPE html>
 <html>
-<head>
 
-  <script src="../lib/js/jquery.min.js"></script>
-  <script src="../lib/js/chartphp.js"></script>
-  <link rel="stylesheet" href="../../lib/js/chartphp.css">
-
-</head>
 <body>
 
 <?php
@@ -118,27 +112,5 @@ $conn->close();
 ?>
 
 
-<?php
-//converting data into charts
-
-// include and create object
-include("../lib/inc/chartphp_dist.php");
-$p = new chartphp();
-
-// set few params
-$p->data =array(array(3,7,9,1,4,6,8,2,5),array(5,3,8,2,6,2,9,2,6));
-$p->chart_type = "area";
-
-// render chart and get html/js output
-$out = $p->render('c1');
-
-?>
-<div style="margin:10px">
-
-<!-- display chart here -->
-<?php echo $out?>
-<!-- display chart here -->
-
-</div>	
 </body>
 </html>

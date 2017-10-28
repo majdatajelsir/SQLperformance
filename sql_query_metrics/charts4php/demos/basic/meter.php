@@ -12,7 +12,7 @@ include("../../lib/inc/chartphp_dist.php");
 $p = new chartphp();
 
 $p->data = array(array(266));
-$p->intervals = array(200,300,400,600);
+$p->intervals = array(200,300,400,700);
 $p->chart_type = "meter";
 
 // Common Options
