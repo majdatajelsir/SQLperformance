@@ -18,6 +18,7 @@ $p->chart_type = "donut";
 $p->title = "Donut Chart";
 
 $out = $p->render('c1');
+
 ?>
 <!DOCTYPE html>
 <html>

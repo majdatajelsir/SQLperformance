@@ -6,12 +6,16 @@
  * @version 1.2.3
  * @license: see license.txt included in package
  */
- 
+
 include("../../lib/inc/chartphp_dist.php");
+
+$query_num = 5;
+$avg_exe = 50.20;
+$tot_exe = 60.14;
 
 $p = new chartphp();
 
-$p->data = array(array(array('Heavy Industry', 12),array('Retail', 9), array('Light Industry', 14), array('Out of home', 16),array('Commuting', 7), array('Orientation', 9)));
+$p->data = array(array(array('Heavy query', $query_num),array('Retail', $query_num), array('Light Industry', $avg_exe), array('Out of home', $avg_exe),array('Commuting', $tot_exe), array('Orientation', $tot_exe)));
 $p->chart_type = "pie";
 
 // Common Options
@@ -31,12 +35,10 @@ $out = $p->render('c1');
 		.jqplot-data-label{color:white;}
 	</style>
 	</head>
-	
+
 	<body>
 		<div style="width:40%; min-width:450px;">
 		<?php echo $out; ?>
 		</div>
 	</body>
 </html>
-
-
