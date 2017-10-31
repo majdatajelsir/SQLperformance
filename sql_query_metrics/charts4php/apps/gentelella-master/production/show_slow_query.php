@@ -284,7 +284,7 @@
 
 
 
-                    $sql = "SELECT start_time ,q_num, avg_exe_time, tot_exe_time FROM queries_summary ";
+                    $sql = "SELECT start_time ,q_num, avg_exe_time, tot_exe_time FROM slow_queries_summary ";
                     $result = $conn->query($sql);
                     ?>
                     <h3>Normal Queries Information</h3>

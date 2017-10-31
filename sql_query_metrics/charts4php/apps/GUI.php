@@ -1,22 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-  <script src="../../lib/js/jquery.min.js"></script>
-  <script src="../../lib/js/chartphp.js"></script>
-  <link rel="stylesheet" href="../../lib/js/chartphp.css">
+  <script src="../lib/js/jquery.min.js"></script>
+  <script src="../lib/js/chartphp.js"></script>
+  <link rel="stylesheet" href="../lib/js/chartphp.css">
 
 
-      <meta charset="utf-8">
-      <meta http-equiv="X-UA-Compatible" content="IE=edge">
-      <meta name="viewport" content="width=device-width, initial-scale=1">
 
-			<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"
-		  integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-      <link href="bootstrap.css" rel="stylesheet">
-      <link href="GUI.css" rel="stylesheet">
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-      <script src="html5shiv.js"></script>
-      <script src="respond.min.js"></script>
+  			<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"
+  		  integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <link href="bootstrap.css" rel="stylesheet">
+        <link href="GUI.css" rel="stylesheet">
+
+        <script src="html5shiv.js"></script>
+        <script src="respond.min.js"></script>
+
+
 
 
 
@@ -141,6 +144,9 @@
 
 					</div>
           <div>
+
+
+
             <form method="post" action="visul_slow_query.php">
 <select name="topology" size="1">
 <option value="1">Last tow days
@@ -149,6 +155,25 @@
 </select>&nbsp;
 <input type="submit" name="submit" value="OK">
 </form>
+
+
+<?php  $query_num = 5;
+$avg_exe = 50.20;
+$tot_exe = 60.14;
+include("../lib/inc/chartphp_dist.php");
+$p = new chartphp();
+
+$p->data = array(array(array('Heavy query', 0),array('Retail', 12), array('Light Industry', 3), array('Out of home', 5),array('Commuting', 6), array('Orientation', 2)));
+$p->chart_type = "pie";
+
+// Common Options
+$p->title = "Pie Chart";
+
+$out = $p->render('c1');?>
+<div style="width:40%; min-width:450px;">
+
+<?php echo $out; ?>
+</div>
           </div>
 					<div class="row">
 						<footer id="admin-footer" class="clearfix">
@@ -166,9 +191,6 @@
 		</div>
 
 
-	  <script src="jquery-3.2.1.min.js"></script>
-    <script src="bootstrap.min.js"></script>
-		<script src="GUI.js"></script>
 
   </body>
 </html>

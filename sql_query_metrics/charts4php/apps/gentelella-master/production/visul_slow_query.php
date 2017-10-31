@@ -2,9 +2,9 @@
 <html>
 <head>
 
-  <script src="../lib/js/jquery.min.js"></script>
-  <script src="../lib/js/chartphp.js"></script>
-  <link rel="stylesheet" href="../../lib/js/chartphp.css">
+  <script src="../../../lib/js/jquery.min.js"></script>
+  <script src="../../../lib/js/chartphp.js"></script>
+  <link rel="stylesheet" href="../../../lib/js/chartphp.css">
 
 
 </head>
@@ -18,7 +18,7 @@
   $dbname = "slow_db";
   //include('GUI.html');
   // Create connection
-  include("../lib/inc/chartphp_dist.php");
+  include("../../../lib/inc/chartphp_dist.php");
   $p = new chartphp();
   $lastweek =array();
   $lastweek2 =array();
