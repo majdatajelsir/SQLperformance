@@ -82,8 +82,7 @@
 
                   <li><a><i class="fa fa-table"></i> Erorr Tracking <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
-                      <li><a href="erorr rate .html">Show Erorr Rate</a></li>
-                      <li><a href="group erorr.html">Guroping Erorr</a></li>
+                        <li><a href="group_error.php"> Error Groups</a></li>
                     </ul>
                   </li>
 
@@ -93,10 +92,10 @@
                     </ul>
                   </li>
 
-                  <li><a><i class="fa fa-clone"></i>Layouts <span class="fa fa-chevron-down"></span></a>
+                  <li><a><i class="fa fa-clone"></i>Visulaization <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
-                      <li><a href="fixed_sidebar.html">Fixed Sidebar</a></li>
-                      <li><a href="fixed_footer.html">Fixed Footer</a></li>
+                      <li><a href="visul_normal_q.php">Normal Queries</a></li>
+                      <li><a href="visul_slow_query.php">Slow Queries</a></li>
                     </ul>
                   </li>
                 </ul>
@@ -226,19 +225,26 @@
           <div class="">
             <div class="page-title">
               <div class="title_left">
-                <h3>Users <small>Some examples to get you started</small></h3>
+                 <h1><small>Choose ------->></small></h1>
               </div>
-
+              <form class="form-control" method="post" action="show_all_q.php">
               <div class="title_right">
                 <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
                   <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search for...">
+
+
+            <select class="form-control" name="topology" size="1">
+            <option value="1">Last tow days
+            <option value="2">Last to weeks
+            <option value="3">Last tow months
+            </select>&nbsp;
                     <span class="input-group-btn">
-                      <button class="btn btn-default" type="button">Go!</button>
+                      <button class="btn btn-default" type="submit">Go!</button>
                     </span>
                   </div>
                 </div>
               </div>
+              </form>
             </div>
 
             <div class="clearfix"></div>
@@ -247,7 +253,7 @@
               <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2>Default Example <small>Users</small></h2>
+                    <h2>Normal Queries Information</h2>
                     <ul class="nav navbar-right panel_toolbox">
                       <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                       </li>
@@ -281,13 +287,53 @@
                     if ($conn->connect_error) {
                         die("Connection failed: " . $conn->connect_error);
                     }
-
-
-
-                    $sql = "SELECT start_time ,q_num, avg_exe_time, tot_exe_time FROM queries_summary ";
+                    $result;
+                    $variable=$_POST['topology'];
+                    $frist_date= date("Y-m-d",strtotime("-7 day"));
+                    $last_date= date("Y-m-d",strtotime("-9 day"));
+                    $sql = "SELECT start_time ,q_num, avg_exe_time, tot_exe_time FROM queries_summary where start_time ='$frist_date'  or start_time ='$last_date';";
                     $result = $conn->query($sql);
+                    if($variable ==1){
+                      $frist_date= date("Y-m-d",strtotime("-7 day"));
+                      $last_date= date("Y-m-d",strtotime("-9 day"));
+                      $sql = "SELECT start_time ,q_num, avg_exe_time, tot_exe_time FROM queries_summary where start_time ='$frist_date'  or start_time ='$last_date';";
+                      $result = $conn->query($sql);
+                    }
+                    if($variable ==2){
+                        $frist_date= date("Y-m-d ",strtotime("-1 day"));
+                        $last_date= date("Y-m-d ",strtotime("-14 day"));
+                        $sql = "SELECT start_time,q_num, avg_exe_time, tot_exe_time  FROM queries_summary WHERE  start_time BETWEEN '$last_date' and '$frist_date';";
+                        $result = mysqli_query($conn, $sql);
+                    }
+                    if($variable ==3){
+                      $frist_date= date("Y-m-d",strtotime("-1 day"));
+                      $last_date= date("Y-m-d",strtotime("-60 day"));
+                      $sql = "SELECT start_time ,q_num, avg_exe_time, tot_exe_time FROM queries_summary WHERE  start_time BETWEEN '$last_date' and '$frist_date';";
+                      $result = $conn->query($sql);
+                    }
+
                     ?>
-                    <h3>Normal Queries Information</h3>
+                    <div class="row">
+                      <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="dashboard_graph">
+
+                          <div class="row x_title">
+
+                            <div class="col-md-6">
+
+
+                            </div>
+                          </div>
+
+
+
+
+                          <div class="clearfix"></div>
+                        </div>
+                      </div>
+
+                    </div>
+
 
                     <table id="datatable" class="table table-striped table-bordered">
                       <thead>

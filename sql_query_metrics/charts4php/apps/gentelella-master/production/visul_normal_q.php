@@ -1,8 +1,3 @@
-
-
-
-
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -52,6 +47,7 @@
     $lastmonth2_data =array();
     $total_execution_time;
     $avg_execution_time;
+    $week2_tot_out;
     $conn = new mysqli($servername, $username, $password, $dbname);
     $current_date=date('Y-m-d H:i:s:ms');
     $variable=$_POST['topology']; //contains the value they chose from T1, etc.
@@ -69,6 +65,156 @@
           break;
 
     }
+    if($variable == 1){
+      $frist_date= date("Y-m-d",strtotime("-4 day"));
+      $last_date= date("Y-m-d",strtotime("-5 day"));
+      $sql = "SELECT q_num, avg_exe_time, tot_exe_time  FROM queries_summary WHERE start_time='$frist_date';";
+      $result = mysqli_query($conn, $sql);
+      $row = mysqli_fetch_assoc($result);
+      $query_num = $row["q_num"];
+      $avg_exe = date('H.i', strtotime($row["avg_exe_time"]));
+      $tot_exe = date('H.i', strtotime($row["tot_exe_time"]));
+
+      $sql3 = "SELECT q_num, avg_exe_time, tot_exe_time  FROM queries_summary WHERE start_time='$last_date';";
+      $result3 = mysqli_query($conn, $sql3);
+      $row3 = mysqli_fetch_assoc($result3);
+      $query_num3 = $row3["q_num"];
+      $avg_exe3 = date('H.i', strtotime($row3["avg_exe_time"]));
+      $tot_exe3 = date('H.i', strtotime($row3["tot_exe_time"]));
+
+
+       $p->data = array(array(array($frist_date, (int)$query_num3),array($last_date, (int)$query_num)));
+       $p->chart_type = "pie";
+       $q_num_out = $p->render('c1');
+
+       $p->data = array(array(array($frist_date, (int)$avg_exe),array($last_date, (int)$avg_exe3)));
+       $p->chart_type = "pie";
+       $avg_out = $p->render('c2');
+
+       $p->data = array(array(array($frist_date, (int)$tot_exe),array($last_date, (int)$tot_exe3)));
+       $p->chart_type = "pie";
+       $tot_out = $p->render('c3');
+
+
+    }
+    if($variable == 2){
+      for($x=1 ;$x<8;$x++){
+        $frist_date= date("Y-m-d ",strtotime("-$x day"));
+        array_push($lastweek,$frist_date);
+      }
+
+      for($x=8;$x<15;$x++){
+        $last_date= date("Y-m-d ",strtotime("-$x day"));
+        array_push($lastweek2,$last_date);
+      }
+      for($x=0;$x<8;$x++){
+        //frist week
+        $sql = "SELECT q_num, avg_exe_time, tot_exe_time  FROM queries_summary WHERE start_time='$lastweek[$x]';";
+        $result = mysqli_query($conn, $sql);
+        $row = mysqli_fetch_assoc($result);
+        $query_num = $row["q_num"];
+        $avg_exe = date('H.i', strtotime($row["avg_exe_time"]));
+        $tot_exe = date('H.i', strtotime($row["tot_exe_time"]));
+        array_push($lastweek_data,$query_num,$avg_exe,$tot_exe);
+        //second week
+        $sql2 = "SELECT q_num, avg_exe_time, tot_exe_time  FROM queries_summary WHERE start_time='$lastweek2[$x]';";
+        $result2 = mysqli_query($conn, $sql2);
+        $row2 = mysqli_fetch_assoc($result2);
+        $query_num2 = $row2["q_num"];
+        $avg_exe2 = date('H.i', strtotime($row2["avg_exe_time"]));
+        $tot_exe2 = date('H.i', strtotime($row2["tot_exe_time"]));
+        array_push($lastweek2_data,$query_num2,$avg_exe2,$tot_exe2);
+
+
+      }
+
+      $p->data = array(array(array($lastweek[0], (int)$lastweek_data[0]),array($lastweek[1],(int)$lastweek_data[3]),array($lastweek[2],(int)$lastweek_data[6]),array($lastweek[3],(int)$lastweek_data[9]),array($lastweek[4],(int)$lastweek_data[12]),array($lastweek[5],(int)$lastweek_data[15]),array($lastweek[6],(int)$lastweek_data[18])));
+      $p->chart_type = "pie";
+      $week1_q_num_out = $p->render('c1');
+
+      $p->data = array(array(array($lastweek[0], (int)$lastweek_data[1]),array($lastweek[1],(int)$lastweek_data[4]),array($lastweek[2],(int)$lastweek_data[7]),array($lastweek[3],(int)$lastweek_data[10]),array($lastweek[4],(int)$lastweek_data[13]),array($lastweek[5],(int)$lastweek_data[16]),array($lastweek[6],(int)$lastweek_data[19])));
+      $p->chart_type = "pie";
+      $week1_avg_out = $p->render('c2');
+
+      $p->data = array(array(array($lastweek[0], (int)$lastweek_data[2]),array($lastweek[1],(int)$lastweek_data[5]),array($lastweek[2],(int)$lastweek_data[8]),array($lastweek[3],(int)$lastweek_data[11]),array($lastweek[4],(int)$lastweek_data[14]),array($lastweek[5],(int)$lastweek_data[17]),array($lastweek[6],(int)$lastweek_data[20])));
+      $p->chart_type = "pie";
+      $week1_tot_out = $p->render('c3');
+
+      $p->data = array(array(array($lastweek2[0], (int)$lastweek2_data[0]),array($lastweek2[1],(int)$lastweek2_data[3]),array($lastweek2[2],(int)$lastweek2_data[6]),array($lastweek2[3],(int)$lastweek2_data[9]),array($lastweek2[4],(int)$lastweek2_data[12]),array($lastweek2[5],(int)$lastweek2_data[15]),array($lastweek2[6],(int)$lastweek2_data[18])));
+      $p->chart_type = "pie";
+      $week2_q_num_out = $p->render('c4');
+
+      $p->data = array(array(array($lastweek2[0], (int)$lastweek2_data[1]),array($lastweek2[1],(int)$lastweek2_data[4]),array($lastweek2[2],(int)$lastweek2_data[7]),array($lastweek2[3],(int)$lastweek2_data[10]),array($lastweek2[4],(int)$lastweek2_data[13]),array($lastweek2[5],(int)$lastweek2_data[16]),array($lastweek2[6],(int)$lastweek2_data[19])));
+      $p->chart_type = "pie";
+      $week2_avg_out = $p->render('c5');
+
+      $p->data = array(array(array($lastweek2[0], (int)$lastweek2_data[2]),array($lastweek2[1],(int)$lastweek2_data[5]),array($lastweek2[2],(int)$lastweek2_data[8]),array($lastweek2[3],(int)$lastweek2_data[11]),array($lastweek2[4],(int)$lastweek2_data[14]),array($lastweek2[5],(int)$lastweek2_data[17]),array($lastweek2[6],(int)$lastweek2_data[20])));
+      $p->chart_type = "pie";
+      $week2_tot_out = $p->render('c6');
+    }
+    if($variable == 3){
+
+      for($x=1;$x<31;$x++){
+        $frist_date= date("Y-m-d ",strtotime("-$x day"));
+        array_push($lastmonth,$frist_date);
+
+      }
+
+      for($x=31;$x<61;$x++){
+        $last_date= date("Y-m-d ",strtotime("-$x day"));
+        array_push($lastmonth2,$last_date);
+      }
+      for($x=0;$x<30;$x++){
+        //frist week
+        $sql = "SELECT q_num, avg_exe_time, tot_exe_time  FROM queries_summary WHERE start_time='$lastmonth[$x]';";
+        $result = mysqli_query($conn, $sql);
+        $row = mysqli_fetch_assoc($result);
+        $query_num = $row["q_num"];
+        $avg_exe = date('H.i', strtotime($row["avg_exe_time"]));
+        $tot_exe = date('H.i', strtotime($row["tot_exe_time"]));
+        array_push($lastmonth_data,$query_num,$avg_exe,$tot_exe);
+        //second week
+        $sql2 = "SELECT q_num, avg_exe_time, tot_exe_time  FROM queries_summary WHERE start_time='$lastmonth2[$x]';";
+        $result2 = mysqli_query($conn, $sql2);
+        $row2 = mysqli_fetch_assoc($result2);
+        $query_num2 = $row2["q_num"];
+        $avg_exe2 = date('H.i', strtotime($row2["avg_exe_time"]));
+        $tot_exe2 = date('H.i', strtotime($row2["tot_exe_time"]));
+        array_push($lastmonth2_data,$query_num2,$avg_exe2,$tot_exe2);
+
+
+      }
+
+      $p->data=array(array(array($lastmonth[0],(int)$lastmonth_data[0]),array($lastmonth[1],(int)$lastmonth_data[3]),array($lastmonth[2],(int)$lastmonth_data[6]),array($lastmonth[3],(int)$lastmonth_data[9]),array($lastmonth[4],(int)$lastmonth_data[12]),array($lastmonth[5],(int)$lastmonth_data[15]),array($lastmonth[6],(int)$lastmonth_data[18]),array($lastmonth[7],(int)$lastmonth_data[21]),array($lastmonth[8],(int)$lastmonth_data[24]),array($lastmonth[9],(int)$lastmonth_data[27]),array($lastmonth[10],(int)$lastmonth_data[30]),array($lastmonth[11],(int)$lastmonth_data[33]),array($lastmonth[12],(int)$lastmonth_data[36]),array($lastmonth[13],(int)$lastmonth_data[39]),array($lastmonth[14],(int)$lastmonth_data[42]),array($lastmonth[15],(int)$lastmonth_data[45]),array($lastmonth[16],(int)$lastmonth_data[48]),array($lastmonth[17],(int)$lastmonth_data[51]),array($lastmonth[18],(int)$lastmonth_data[54]),array($lastmonth[19],(int)$lastmonth_data[57]),array($lastmonth[20],(int)$lastmonth_data[60]),array($lastmonth[21],(int)$lastmonth_data[63]),array($lastmonth[22],(int)$lastmonth_data[66]),array($lastmonth[23],(int)$lastmonth_data[69]), array($lastmonth[24],(int)$lastmonth_data[72]),array($lastmonth[25],(int)$lastmonth_data[75]),array($lastmonth[26],(int)$lastmonth_data[78]),array($lastmonth[27],(int)$lastmonth_data[81]),array($lastmonth[28],(int)$lastmonth_data[84]),array($lastmonth[29],(int)$lastmonth_data[87]),array($lastmonth[30],(int)$lastmonth_data[90])));
+      $p->chart_type = "pie";
+      $month1_q_num_out = $p->render('c1');
+
+      $p->data=array(array(array($lastmonth[0],(int)$lastmonth_data[0]),array($lastmonth[1],(int)$lastmonth_data[3]),array($lastmonth[2],(int)$lastmonth_data[6]),array($lastmonth[3],(int)$lastmonth_data[9]),array($lastmonth[4],(int)$lastmonth_data[12]),array($lastmonth[5],(int)$lastmonth_data[15]),array($lastmonth[6],(int)$lastmonth_data[18]),array($lastmonth[7],(int)$lastmonth_data[21]),array($lastmonth[8],(int)$lastmonth_data[24]),array($lastmonth[9],(int)$lastmonth_data[27]),array($lastmonth[10],(int)$lastmonth_data[30]),array($lastmonth[11],(int)$lastmonth_data[33]),array($lastmonth[12],(int)$lastmonth_data[36]),array($lastmonth[13],(int)$lastmonth_data[39]),array($lastmonth[14],(int)$lastmonth_data[42]),array($lastmonth[15],(int)$lastmonth_data[45]),array($lastmonth[16],(int)$lastmonth_data[48]),array($lastmonth[17],(int)$lastmonth_data[51]),array($lastmonth[18],(int)$lastmonth_data[54]),array($lastmonth[19],(int)$lastmonth_data[57]),array($lastmonth[20],(int)$lastmonth_data[60]),array($lastmonth[21],(int)$lastmonth_data[63]),array($lastmonth[22],(int)$lastmonth_data[66]),array($lastmonth[23],(int)$lastmonth_data[69]), array($lastmonth[24],(int)$lastmonth_data[72]),array($lastmonth[25],(int)$lastmonth_data[75]),array($lastmonth[26],(int)$lastmonth_data[78]),array($lastmonth[27],(int)$lastmonth_data[81]),array($lastmonth[28],(int)$lastmonth_data[84]),array($lastmonth[29],(int)$lastmonth_data[87]),array($lastmonth[30],(int)$lastmonth_data[90])));
+      $p->chart_type = "pie";      $p->chart_type = "pie";
+      $month1_avg_out = $p->render('c2');
+
+      $p->data=array(array(array($lastmonth[0],(int)$lastmonth_data[0]),array($lastmonth[1],(int)$lastmonth_data[3]),array($lastmonth[2],(int)$lastmonth_data[6]),array($lastmonth[3],(int)$lastmonth_data[9]),array($lastmonth[4],(int)$lastmonth_data[12]),array($lastmonth[5],(int)$lastmonth_data[15]),array($lastmonth[6],(int)$lastmonth_data[18]),array($lastmonth[7],(int)$lastmonth_data[21]),array($lastmonth[8],(int)$lastmonth_data[24]),array($lastmonth[9],(int)$lastmonth_data[27]),array($lastmonth[10],(int)$lastmonth_data[30]),array($lastmonth[11],(int)$lastmonth_data[33]),array($lastmonth[12],(int)$lastmonth_data[36]),array($lastmonth[13],(int)$lastmonth_data[39]),array($lastmonth[14],(int)$lastmonth_data[42]),array($lastmonth[15],(int)$lastmonth_data[45]),array($lastmonth[16],(int)$lastmonth_data[48]),array($lastmonth[17],(int)$lastmonth_data[51]),array($lastmonth[18],(int)$lastmonth_data[54]),array($lastmonth[19],(int)$lastmonth_data[57]),array($lastmonth[20],(int)$lastmonth_data[60]),array($lastmonth[21],(int)$lastmonth_data[63]),array($lastmonth[22],(int)$lastmonth_data[66]),array($lastmonth[23],(int)$lastmonth_data[69]), array($lastmonth[24],(int)$lastmonth_data[72]),array($lastmonth[25],(int)$lastmonth_data[75]),array($lastmonth[26],(int)$lastmonth_data[78]),array($lastmonth[27],(int)$lastmonth_data[81]),array($lastmonth[28],(int)$lastmonth_data[84]),array($lastmonth[29],(int)$lastmonth_data[87]),array($lastmonth[30],(int)$lastmonth_data[90])));
+      $p->chart_type = "pie";      $p->chart_type = "pie";
+      $month1_tot_out = $p->render('c3');
+
+     $p->data=array(array(array($lastmonth[0],(int)$lastmonth_data[0]),array($lastmonth[1],(int)$lastmonth_data[3]),array($lastmonth[2],(int)$lastmonth_data[6]),array($lastmonth[3],(int)$lastmonth_data[9]),array($lastmonth[4],(int)$lastmonth_data[12]),array($lastmonth[5],(int)$lastmonth_data[15]),array($lastmonth[6],(int)$lastmonth_data[18]),array($lastmonth[7],(int)$lastmonth_data[21]),array($lastmonth[8],(int)$lastmonth_data[24]),array($lastmonth[9],(int)$lastmonth_data[27]),array($lastmonth[10],(int)$lastmonth_data[30]),array($lastmonth[11],(int)$lastmonth_data[33]),array($lastmonth[12],(int)$lastmonth_data[36]),array($lastmonth[13],(int)$lastmonth_data[39]),array($lastmonth[14],(int)$lastmonth_data[42]),array($lastmonth[15],(int)$lastmonth_data[45]),array($lastmonth[16],(int)$lastmonth_data[48]),array($lastmonth[17],(int)$lastmonth_data[51]),array($lastmonth[18],(int)$lastmonth_data[54]),array($lastmonth[19],(int)$lastmonth_data[57]),array($lastmonth[20],(int)$lastmonth_data[60]),array($lastmonth[21],(int)$lastmonth_data[63]),array($lastmonth[22],(int)$lastmonth_data[66]),array($lastmonth[23],(int)$lastmonth_data[69]), array($lastmonth[24],(int)$lastmonth_data[72]),array($lastmonth[25],(int)$lastmonth_data[75]),array($lastmonth[26],(int)$lastmonth_data[78]),array($lastmonth[27],(int)$lastmonth_data[81]),array($lastmonth[28],(int)$lastmonth_data[84]),array($lastmonth[29],(int)$lastmonth_data[87]),array($lastmonth[30],(int)$lastmonth_data[90])));
+      $p->chart_type = "pie";
+      $p->chart_type = "pie";
+      $month2_q_num_out = $p->render('c4');
+
+      $p->data=array(array(array($lastmonth[0],(int)$lastmonth_data[0]),array($lastmonth[1],(int)$lastmonth_data[3]),array($lastmonth[2],(int)$lastmonth_data[6]),array($lastmonth[3],(int)$lastmonth_data[9]),array($lastmonth[4],(int)$lastmonth_data[12]),array($lastmonth[5],(int)$lastmonth_data[15]),array($lastmonth[6],(int)$lastmonth_data[18]),array($lastmonth[7],(int)$lastmonth_data[21]),array($lastmonth[8],(int)$lastmonth_data[24]),array($lastmonth[9],(int)$lastmonth_data[27]),array($lastmonth[10],(int)$lastmonth_data[30]),array($lastmonth[11],(int)$lastmonth_data[33]),array($lastmonth[12],(int)$lastmonth_data[36]),array($lastmonth[13],(int)$lastmonth_data[39]),array($lastmonth[14],(int)$lastmonth_data[42]),array($lastmonth[15],(int)$lastmonth_data[45]),array($lastmonth[16],(int)$lastmonth_data[48]),array($lastmonth[17],(int)$lastmonth_data[51]),array($lastmonth[18],(int)$lastmonth_data[54]),array($lastmonth[19],(int)$lastmonth_data[57]),array($lastmonth[20],(int)$lastmonth_data[60]),array($lastmonth[21],(int)$lastmonth_data[63]),array($lastmonth[22],(int)$lastmonth_data[66]),array($lastmonth[23],(int)$lastmonth_data[69]), array($lastmonth[24],(int)$lastmonth_data[72]),array($lastmonth[25],(int)$lastmonth_data[75]),array($lastmonth[26],(int)$lastmonth_data[78]),array($lastmonth[27],(int)$lastmonth_data[81]),array($lastmonth[28],(int)$lastmonth_data[84]),array($lastmonth[29],(int)$lastmonth_data[87]),array($lastmonth[30],(int)$lastmonth_data[90])));
+      $p->chart_type = "pie";      $p->chart_type = "pie";
+      $month2_avg_out = $p->render('c5');
+
+      $p->data=array(array(array($lastmonth[0],(int)$lastmonth_data[0]),array($lastmonth[1],(int)$lastmonth_data[3]),array($lastmonth[2],(int)$lastmonth_data[6]),array($lastmonth[3],(int)$lastmonth_data[9]),array($lastmonth[4],(int)$lastmonth_data[12]),array($lastmonth[5],(int)$lastmonth_data[15]),array($lastmonth[6],(int)$lastmonth_data[18]),array($lastmonth[7],(int)$lastmonth_data[21]),array($lastmonth[8],(int)$lastmonth_data[24]),array($lastmonth[9],(int)$lastmonth_data[27]),array($lastmonth[10],(int)$lastmonth_data[30]),array($lastmonth[11],(int)$lastmonth_data[33]),array($lastmonth[12],(int)$lastmonth_data[36]),array($lastmonth[13],(int)$lastmonth_data[39]),array($lastmonth[14],(int)$lastmonth_data[42]),array($lastmonth[15],(int)$lastmonth_data[45]),array($lastmonth[16],(int)$lastmonth_data[48]),array($lastmonth[17],(int)$lastmonth_data[51]),array($lastmonth[18],(int)$lastmonth_data[54]),array($lastmonth[19],(int)$lastmonth_data[57]),array($lastmonth[20],(int)$lastmonth_data[60]),array($lastmonth[21],(int)$lastmonth_data[63]),array($lastmonth[22],(int)$lastmonth_data[66]),array($lastmonth[23],(int)$lastmonth_data[69]), array($lastmonth[24],(int)$lastmonth_data[72]),array($lastmonth[25],(int)$lastmonth_data[75]),array($lastmonth[26],(int)$lastmonth_data[78]),array($lastmonth[27],(int)$lastmonth_data[81]),array($lastmonth[28],(int)$lastmonth_data[84]),array($lastmonth[29],(int)$lastmonth_data[87]),array($lastmonth[30],(int)$lastmonth_data[90])));
+      $p->chart_type = "pie";
+
+      $month2_tot_out = $p->render('c6');
+
+
+
+    }
+  $variable=$_POST['topology'];
 ?>
     <div class="container body">
       <div class="main_container">
@@ -109,8 +255,8 @@
 
                   <li><a><i class="fa fa-edit"></i> Sql Performance <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
-                      <li><a href="show all q.html">Show All Query</a></li>
-                      <li><a href="show slow q.html">Show Slow Query</a></li>
+                      <li><a href="show_all_q.php">Show All Query</a></li>
+                      <li><a href="show_slow_query.php">Show Slow Query</a></li>
                     </ul>
                   </li>
 
@@ -123,8 +269,7 @@
 
                   <li><a><i class="fa fa-table"></i> Erorr Tracking <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
-                      <li><a href="erorr rate .html">Show Erorr Rate</a></li>
-                      <li><a href="group erorr.html">Guroping Erorr</a></li>
+                      <li><a href="group_error.php"> Error Groups</a></li>
                     </ul>
                   </li>
 
@@ -136,8 +281,8 @@
 
                  <li><a><i class="fa fa-clone"></i>Visualization<span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
-                      <li><a href="v_normal_query.html">Normel query</a></li>
-                      <li><a href="v_slow_qurey.html">slow query</a></li>
+                      <li><a href="visul_normal_q.php">Normel query</a></li>
+                      <li><a href="visul_slow_query.php">slow query</a></li>
                     </ul>
                   </li>
                 </ul>
@@ -262,6 +407,29 @@
                 <h3>Visualization<small>  Normal Query</small></h3>   </br>
 
               </div>
+              <div class="page-title">
+                <div class="title_left">
+                  <h3>Users <small>Some examples to get you started</small></h3>
+                </div>
+                <form class="form-control" method="post" action="visul_normal_q.php">
+                <div class="title_right">
+                  <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+                    <div class="input-group">
+
+
+              <select class="form-control" name="topology" size="1">
+              <option value="1" selected>Last tow days
+              <option value="2">Last to weeks
+              <option value="3">Last tow months
+              </select>&nbsp;
+                      <span class="input-group-btn">
+                        <button class="btn btn-default" type="submit">Go!</button>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                </form>
+              </div>
 
 
             </div>
@@ -292,202 +460,25 @@
                     <div class="clearfix"></div>
                   </div>
                   <div class="x_content">
+
                     <?php
-                    if($variable == 1){
-                      $frist_date= date("Y-m-d",strtotime("-4 day"));
-                      $last_date= date("Y-m-d",strtotime("-5 day"));
-                      $sql = "SELECT q_num, avg_exe_time, tot_exe_time  FROM queries_summary WHERE start_time='$frist_date';";
-                      $result = mysqli_query($conn, $sql);
-                      $row = mysqli_fetch_assoc($result);
-                      $query_num = $row["q_num"];
-                      $avg_exe = date('H.i', strtotime($row["avg_exe_time"]));
-                      $tot_exe = date('H.i', strtotime($row["tot_exe_time"]));
-
-                      $sql3 = "SELECT q_num, avg_exe_time, tot_exe_time  FROM queries_summary WHERE start_time='$last_date';";
-                      $result3 = mysqli_query($conn, $sql3);
-                      $row3 = mysqli_fetch_assoc($result3);
-                      $query_num3 = $row3["q_num"];
-                      $avg_exe3 = date('H.i', strtotime($row3["avg_exe_time"]));
-                      $tot_exe3 = date('H.i', strtotime($row3["tot_exe_time"]));
-
-
-                       $p->data = array(array(array($frist_date, $query_num3),array($last_date, $query_num)));
-                       $p->chart_type = "pie";
-                       $q_num_out = $p->render('c1');
-
-                       $p->data = array(array(array($frist_date, 29),array($last_date, 65)));
-                       $p->chart_type = "pie";
-                       $avg_out = $p->render('c2');
-
-                       $p->data = array(array(array($frist_date, 20),array($last_date, 2)));
-                       $p->chart_type = "pie";
-                       $tot_out = $p->render('c3');
-                       ?>
-
-                         <div style="margin:10;width:20%; min-width:450px;">
-                       <?php echo $q_num_out;?>
-                       <?php echo $avg_out;?>
-                       <?php echo $tot_out;?>
-                     </div>
-                     <?php
-
-
-
-
-
-                    }
+                     if($variable == 1){
+                       echo $q_num_out;
+                       echo $avg_out;
+                      echo $tot_out;
+                     }
                     if($variable == 2){
-                      for($x=1 ;$x<8;$x++){
-                        $frist_date= date("Y-m-d ",strtotime("-$x day"));
-                        array_push($lastweek,$frist_date);
-                      }
-
-                      for($x=8;$x<15;$x++){
-                        $last_date= date("Y-m-d ",strtotime("-$x day"));
-                        array_push($lastweek2,$last_date);
-                      }
-                      for($x=0;$x<8;$x++){
-                        //frist week
-                        $sql = "SELECT q_num, avg_exe_time, tot_exe_time  FROM queries_summary WHERE start_time='$lastweek[$x]';";
-                        $result = mysqli_query($conn, $sql);
-                        $row = mysqli_fetch_assoc($result);
-                        $query_num = $row["q_num"];
-                        $avg_exe = date('H.i', strtotime($row["avg_exe_time"]));
-                        $tot_exe = date('H.i', strtotime($row["tot_exe_time"]));
-                        array_push($lastweek_data,$query_num,$avg_exe,$tot_exe);
-                        //second week
-                        $sql2 = "SELECT q_num, avg_exe_time, tot_exe_time  FROM queries_summary WHERE start_time='$lastweek2[$x]';";
-                        $result2 = mysqli_query($conn, $sql2);
-                        $row2 = mysqli_fetch_assoc($result2);
-                        $query_num2 = $row2["q_num"];
-                        $avg_exe2 = date('H.i', strtotime($row2["avg_exe_time"]));
-                        $tot_exe2 = date('H.i', strtotime($row2["tot_exe_time"]));
-                        array_push($lastweek2_data,$query_num2,$avg_exe2,$tot_exe2);
-
-
-                      }
-
-                      $p->data = array(array(array($lastweek[0], $lastweek_data[0]),array($lastweek[1],$lastweek_data[3]),array($lastweek[2],$lastweek_data[6]),array($lastweek[3],$lastweek_data[9]),array($lastweek[4],$lastweek_data[12]),array($lastweek[5],$lastweek_data[15])));
-                      $p->chart_type = "pie";
-                      $week1_q_num_out = $p->render('c1');
-
-                      $p->data = array(array(array($frist_date, 29),array($last_date, 65)));
-                      $p->chart_type = "pie";
-                      $week1_avg_out = $p->render('c2');
-
-                      $p->data = array(array(array($frist_date, 20),array($last_date, 2)));
-                      $p->chart_type = "pie";
-                      $week1_tot_out = $p->render('c3');
-
-                      $p->data = array(array(array($lastweek[0], $lastweek_data[0]),array($lastweek[1],$lastweek_data[3]),array($lastweek[2],$lastweek_data[6]),array($lastweek[3],$lastweek_data[9]),array($lastweek[4],$lastweek_data[12]),array($lastweek[5],$lastweek_data[15])));
-                      $p->chart_type = "pie";
-                      $week2_q_num_out = $p->render('c4');
-
-                      $p->data = array(array(array($frist_date, 29),array($last_date, 65)));
-                      $p->chart_type = "pie";
-                      $week2_avg_out = $p->render('c5');
-
-                      $p->data = array(array(array($frist_date, 20),array($last_date, 2)));
-                      $p->chart_type = "pie";
-                      $week2_tot_out = $p->render('c6');
-                      ?>
-                  <div style="background-color: rgb(12, 134, 103);">
-                        <div style="margin:10;width:20%; min-width:450px;">
-                      <?php echo $week1_q_num_out;?>
-                      <?php echo $week1_avg_out;?>
-                      <?php echo $week1_tot_out;?>
-                    </div>
-                    <div style="margin:10;width:20%; min-width:450px;">
-
-                    <?php echo $week2_q_num_out;?>
-                    <?php echo $week2_avg_out;?>
-                    <?php echo $week2_tot_out;?>
-                      </div>
-                    </div>
-                  <?php
+                       echo $week1_q_num_out;
+                       echo $week1_avg_out;
+                       echo $week1_tot_out;
                     }
                     if($variable == 3){
+                      echo $month1_q_num_out;
+                      echo $month1_avg_out;
+                      echo $month1_tot_out;
 
-                      for($x=1;$x<31;$x++){
-                        $frist_date= date("Y-m-d ",strtotime("-$x day"));
-                        array_push($lastmonth,$frist_date);
-
-                      }
-
-
-                      for($x=31;$x<61;$x++){
-                        $last_date= date("Y-m-d ",strtotime("-$x day"));
-                        array_push($lastmonth2,$last_date);
-                      }
-                      for($x=0;$x<30;$x++){
-                        //frist week
-                        $sql = "SELECT q_num, avg_exe_time, tot_exe_time  FROM queries_summary WHERE start_time='$lastmonth[$x]';";
-                        $result = mysqli_query($conn, $sql);
-                        $row = mysqli_fetch_assoc($result);
-                        $query_num = $row["q_num"];
-                        $avg_exe = date('H.i', strtotime($row["avg_exe_time"]));
-                        $tot_exe = date('H.i', strtotime($row["tot_exe_time"]));
-                        array_push($lastmonth_data,$query_num,$avg_exe,$tot_exe);
-                        //second week
-                        $sql2 = "SELECT q_num, avg_exe_time, tot_exe_time  FROM queries_summary WHERE start_time='$lastmonth2[$x]';";
-                        $result2 = mysqli_query($conn, $sql2);
-                        $row2 = mysqli_fetch_assoc($result2);
-                        $query_num2 = $row2["q_num"];
-                        $avg_exe2 = date('H.i', strtotime($row2["avg_exe_time"]));
-                        $tot_exe2 = date('H.i', strtotime($row2["tot_exe_time"]));
-                        array_push($lastmonth2_data,$query_num2,$avg_exe2,$tot_exe2);
-
-
-                      }
-
-                      $p->data = array(array(array($lastmonth[0], $lastmonth_data[0]),array($lastmonth[1],$lastmonth_data[3]),array($lastmonth[2],$lastmonth_data[6]),array($lastmonth[3],$lastmonth_data[9]),array($lastmonth[4],$lastmonth_data[12]),array($lastmonth[5],$lastmonth_data[15])));
-                      $p->chart_type = "pie";
-                      $month1_q_num_out = $p->render('c1');
-
-                      $p->data = array(array(array($frist_date, 29),array($last_date, 65)));
-                      $p->chart_type = "pie";
-                      $month1_avg_out = $p->render('c2');
-
-                      $p->data = array(array(array($frist_date, 20),array($last_date, 2)));
-                      $p->chart_type = "pie";
-                      $month1_tot_out = $p->render('c3');
-
-                      $p->data = array(array(array($lastmonth[0], $lastmonth_data[0]),array($lastmonth[1],$lastmonth_data[3]),array($lastweek[2],$lastmonth_data[6]),array($lastmonth[3],$lastweek_data[9]),array($lastmonth[4],$lastmonth_data[12]),array($lastmonth[5],$lastmonth_data[15])));
-                      $p->chart_type = "pie";
-                      $month2_q_num_out = $p->render('c4');
-
-                      $p->data = array(array(array($frist_date, 29),array($last_date, 65)));
-                      $p->chart_type = "pie";
-                      $month2_avg_out = $p->render('c5');
-
-                      $p->data = array(array(array($frist_date, 20),array($last_date, 2),array($last_date, 2),array($last_date, 2),array($last_date, 2),array($last_date, 2),array($last_date, 2),array($last_date, 2),array($last_date, 2),array($last_date, 2),array($last_date, 2),array($last_date, 2),array($last_date, 2),array($last_date, 2),array($last_date, 2),array($last_date, 2),array($last_date, 2),array($last_date, 2),array($last_date, 2),array($last_date, 2),array($last_date, 2),array($last_date, 2),array($last_date, 2),array($last_date, 26),array($last_date, 22),array($last_date, 15),array($last_date, 9),array($last_date, 4)));
-                      $p->chart_type = "pie";
-                      $month2_tot_out = $p->render('c6');
-                      ?>
-                    <div>
-                        <div style="margin:1;width:20%; min-width:450px;">
-                      <?php echo $month1_q_num_out;?>
-                      <?php echo $month1_avg_out;?>
-                      <?php echo $month1_tot_out;?>
-                    </div>
-                    <div style="margin:1;width:20%; min-width:450px;">
-
-                    <?php echo $month2_q_num_out;?>
-                    <?php echo $month2_avg_out;?>
-                    <?php echo $month2_tot_out;?>
-                      </div>
-                    </div>
-                    <?php
                     }
-
-
-                    //converting data into charts
-                    // include and create object
-
-
                     ?>
-
-
                   </div>
                 </div>
               </div><!--end chart -->
@@ -506,211 +497,43 @@
                     <div class="clearfix"></div>
                   </div>
                   <div class="x_content">
-                    <?php
-                    if($variable == 1){
-                      $frist_date= date("Y-m-d",strtotime("-4 day"));
-                      $last_date= date("Y-m-d",strtotime("-5 day"));
-                      $sql = "SELECT q_num, avg_exe_time, tot_exe_time  FROM queries_summary WHERE start_time='$frist_date';";
-                      $result = mysqli_query($conn, $sql);
-                      $row = mysqli_fetch_assoc($result);
-                      $query_num = $row["q_num"];
-                      $avg_exe = date('H.i', strtotime($row["avg_exe_time"]));
-                      $tot_exe = date('H.i', strtotime($row["tot_exe_time"]));
 
-                      $sql3 = "SELECT q_num, avg_exe_time, tot_exe_time  FROM queries_summary WHERE start_time='$last_date';";
-                      $result3 = mysqli_query($conn, $sql3);
-                      $row3 = mysqli_fetch_assoc($result3);
-                      $query_num3 = $row3["q_num"];
-                      $avg_exe3 = date('H.i', strtotime($row3["avg_exe_time"]));
-                      $tot_exe3 = date('H.i', strtotime($row3["tot_exe_time"]));
+                          <?php
+                          if($variable == 1){
+                            echo $q_num_out;
+                            echo $avg_out;
+                           echo $tot_out;
+                          }
+                         if($variable == 2){
+                            echo $week2_q_num_out;
+                            echo $week2_avg_out;
+                            echo $week2_tot_out;
+                         }
+                         if($variable == 3){
+                           echo $month2_q_num_out;
+                           echo $month2_avg_out;
+                           echo $month2_tot_out;
+                         }
+                          ?>
 
-
-                       $p->data = array(array(array($frist_date, $query_num3),array($last_date, $query_num)));
-                       $p->chart_type = "pie";
-                       $q_num_out = $p->render('c1');
-
-                       $p->data = array(array(array($frist_date, 29),array($last_date, 65)));
-                       $p->chart_type = "pie";
-                       $avg_out = $p->render('c2');
-
-                       $p->data = array(array(array($frist_date, 20),array($last_date, 2)));
-                       $p->chart_type = "pie";
-                       $tot_out = $p->render('c3');
-                       ?>
-
-                         <div style="margin:10;width:20%; min-width:450px;">
-                       <?php echo $q_num_out;?>
-                       <?php echo $avg_out;?>
-                       <?php echo $tot_out;?>
-                     </div>
-                     <?php
-
-
-
-
-
-                    }
-                    if($variable == 2){
-                      for($x=1 ;$x<8;$x++){
-                        $frist_date= date("Y-m-d ",strtotime("-$x day"));
-                        array_push($lastweek,$frist_date);
-                      }
-
-                      for($x=8;$x<15;$x++){
-                        $last_date= date("Y-m-d ",strtotime("-$x day"));
-                        array_push($lastweek2,$last_date);
-                      }
-                      for($x=0;$x<8;$x++){
-                        //frist week
-                        $sql = "SELECT q_num, avg_exe_time, tot_exe_time  FROM queries_summary WHERE start_time='$lastweek[$x]';";
-                        $result = mysqli_query($conn, $sql);
-                        $row = mysqli_fetch_assoc($result);
-                        $query_num = $row["q_num"];
-                        $avg_exe = date('H.i', strtotime($row["avg_exe_time"]));
-                        $tot_exe = date('H.i', strtotime($row["tot_exe_time"]));
-                        array_push($lastweek_data,$query_num,$avg_exe,$tot_exe);
-                        //second week
-                        $sql2 = "SELECT q_num, avg_exe_time, tot_exe_time  FROM queries_summary WHERE start_time='$lastweek2[$x]';";
-                        $result2 = mysqli_query($conn, $sql2);
-                        $row2 = mysqli_fetch_assoc($result2);
-                        $query_num2 = $row2["q_num"];
-                        $avg_exe2 = date('H.i', strtotime($row2["avg_exe_time"]));
-                        $tot_exe2 = date('H.i', strtotime($row2["tot_exe_time"]));
-                        array_push($lastweek2_data,$query_num2,$avg_exe2,$tot_exe2);
-
-
-                      }
-
-                      $p->data = array(array(array($lastweek[0], $lastweek_data[0]),array($lastweek[1],$lastweek_data[3]),array($lastweek[2],$lastweek_data[6]),array($lastweek[3],$lastweek_data[9]),array($lastweek[4],$lastweek_data[12]),array($lastweek[5],$lastweek_data[15])));
-                      $p->chart_type = "pie";
-                      $week1_q_num_out = $p->render('c1');
-
-                      $p->data = array(array(array($frist_date, 29),array($last_date, 65)));
-                      $p->chart_type = "pie";
-                      $week1_avg_out = $p->render('c2');
-
-                      $p->data = array(array(array($frist_date, 20),array($last_date, 2)));
-                      $p->chart_type = "pie";
-                      $week1_tot_out = $p->render('c3');
-
-                      $p->data = array(array(array($lastweek[0], $lastweek_data[0]),array($lastweek[1],$lastweek_data[3]),array($lastweek[2],$lastweek_data[6]),array($lastweek[3],$lastweek_data[9]),array($lastweek[4],$lastweek_data[12]),array($lastweek[5],$lastweek_data[15])));
-                      $p->chart_type = "pie";
-                      $week2_q_num_out = $p->render('c4');
-
-                      $p->data = array(array(array($frist_date, 29),array($last_date, 65)));
-                      $p->chart_type = "pie";
-                      $week2_avg_out = $p->render('c5');
-
-                      $p->data = array(array(array($frist_date, 20),array($last_date, 2)));
-                      $p->chart_type = "pie";
-                      $week2_tot_out = $p->render('c6');
-                      ?>
-                  <div style="background-color: rgb(12, 134, 103);">
-                        <div style="margin:10;width:20%; min-width:450px;">
-                      <?php echo $week1_q_num_out;?>
-                      <?php echo $week1_avg_out;?>
-                      <?php echo $week1_tot_out;?>
-                    </div>
-                    <div style="margin:10;width:20%; min-width:450px;">
-
-                    <?php echo $week2_q_num_out;?>
-                    <?php echo $week2_avg_out;?>
-                    <?php echo $week2_tot_out;?>
-                      </div>
-                    </div>
-                  <?php
-                    }
-                    if($variable == 3){
-
-                      for($x=1;$x<31;$x++){
-                        $frist_date= date("Y-m-d ",strtotime("-$x day"));
-                        array_push($lastmonth,$frist_date);
-
-                      }
-
-
-                      for($x=31;$x<61;$x++){
-                        $last_date= date("Y-m-d ",strtotime("-$x day"));
-                        array_push($lastmonth2,$last_date);
-                      }
-                      for($x=0;$x<30;$x++){
-                        //frist week
-                        $sql = "SELECT q_num, avg_exe_time, tot_exe_time  FROM queries_summary WHERE start_time='$lastmonth[$x]';";
-                        $result = mysqli_query($conn, $sql);
-                        $row = mysqli_fetch_assoc($result);
-                        $query_num = $row["q_num"];
-                        $avg_exe = date('H.i', strtotime($row["avg_exe_time"]));
-                        $tot_exe = date('H.i', strtotime($row["tot_exe_time"]));
-                        array_push($lastmonth_data,$query_num,$avg_exe,$tot_exe);
-                        //second week
-                        $sql2 = "SELECT q_num, avg_exe_time, tot_exe_time  FROM queries_summary WHERE start_time='$lastmonth2[$x]';";
-                        $result2 = mysqli_query($conn, $sql2);
-                        $row2 = mysqli_fetch_assoc($result2);
-                        $query_num2 = $row2["q_num"];
-                        $avg_exe2 = date('H.i', strtotime($row2["avg_exe_time"]));
-                        $tot_exe2 = date('H.i', strtotime($row2["tot_exe_time"]));
-                        array_push($lastmonth2_data,$query_num2,$avg_exe2,$tot_exe2);
-
-
-                      }
-
-                      $p->data = array(array(array($lastmonth[0], $lastmonth_data[0]),array($lastmonth[1],$lastmonth_data[3]),array($lastmonth[2],$lastmonth_data[6]),array($lastmonth[3],$lastmonth_data[9]),array($lastmonth[4],$lastmonth_data[12]),array($lastmonth[5],$lastmonth_data[15])));
-                      $p->chart_type = "pie";
-                      $month1_q_num_out = $p->render('c1');
-
-                      $p->data = array(array(array($frist_date, 29),array($last_date, 65)));
-                      $p->chart_type = "pie";
-                      $month1_avg_out = $p->render('c2');
-
-                      $p->data = array(array(array($frist_date, 20),array($last_date, 2)));
-                      $p->chart_type = "pie";
-                      $month1_tot_out = $p->render('c3');
-
-                      $p->data = array(array(array($lastmonth[0], $lastmonth_data[0]),array($lastmonth[1],$lastmonth_data[3]),array($lastweek[2],$lastmonth_data[6]),array($lastmonth[3],$lastweek_data[9]),array($lastmonth[4],$lastmonth_data[12]),array($lastmonth[5],$lastmonth_data[15])));
-                      $p->chart_type = "pie";
-                      $month2_q_num_out = $p->render('c4');
-
-                      $p->data = array(array(array($frist_date, 29),array($last_date, 65)));
-                      $p->chart_type = "pie";
-                      $month2_avg_out = $p->render('c5');
-
-                      $p->data = array(array(array($frist_date, 20),array($last_date, 2),array($last_date, 2),array($last_date, 2),array($last_date, 2),array($last_date, 2),array($last_date, 2),array($last_date, 2),array($last_date, 2),array($last_date, 2),array($last_date, 2),array($last_date, 2),array($last_date, 2),array($last_date, 2),array($last_date, 2),array($last_date, 2),array($last_date, 2),array($last_date, 2),array($last_date, 2),array($last_date, 2),array($last_date, 2),array($last_date, 2),array($last_date, 2),array($last_date, 26),array($last_date, 22),array($last_date, 15),array($last_date, 9),array($last_date, 4)));
-                      $p->chart_type = "pie";
-                      $month2_tot_out = $p->render('c6');
-                      ?>
-                    <div>
-                        <div style="margin:1;width:20%; min-width:450px;">
-                      <?php echo $month1_q_num_out;?>
-                      <?php echo $month1_avg_out;?>
-                      <?php echo $month1_tot_out;?>
-                    </div>
-                    <div style="margin:1;width:20%; min-width:450px;">
-
-                    <?php echo $month2_q_num_out;?>
-                    <?php echo $month2_avg_out;?>
-                    <?php echo $month2_tot_out;?>
-                      </div>
-                    </div>
-                    <?php
-                    }
-
-
-                    //converting data into charts
-                    // include and create object
-
-
-                    ?>
 
                     </div>
                       </div>
                   </div>
                 </div>
+
+                <div class="row">
+
+
+
+
+                    </div>
               </div>
             </div><!--end chart -->
 
             <!--chart -->
 
-      
+
 
 
             </div>

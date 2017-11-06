@@ -16,10 +16,6 @@ if ($conn2->connect_error) {
     die("Connection failed: " . $conn2->connect_error);
 }
 
-
-
-$sql = "SELECT start_time ,q_num, avg_exe_time, tot_exe_time FROM queries_summary ";
-$result = $conn2->query($sql);
 $sql2 = "SELECT start_time FROM user_query_log_temp ";
 $result2= $conn->query($sql2);
 $row = $result2->fetch_assoc();
@@ -37,19 +33,24 @@ if(!$conn2->query($queryCreatesummaryTable)){
     echo "Table creation failed: (" . $conn2->errno . ") " . $conn2->error;
 }
 
-$current_date=date('Y-m-d H:i:s:ms');
-for($x= 1;$x<=2;$x++){
+$current_date=date('Y-m-d');
+$startTimeStamp = strtotime("2011-07-02");
+$endTimeStamp = strtotime("2011-07-17");
+$dateDiff = abs(strtotime($current_date) - strtotime($query_date));
+$numberDays = $dateDiff/86400;  // 86400 seconds in one day
+$numberDays = intval($numberDays);
+for($x= 1;$x<=$numberDays;$x++){
 
-    $last_date= date("Y-m-d H:i:s:ms",strtotime("-$x day"));
+    $last_date= date("Y-m-d",strtotime("-$x day"));
     /*****************avg execution time*****************/
-    $sql_avg="SELECT SEC_TO_TIME(AVG(TIME_TO_SEC(`query_time`))) AS query_time FROM user_query_log_temp where start_time ='$query_date'";
+    $sql_avg="SELECT SEC_TO_TIME(AVG(TIME_TO_SEC(`query_time`))) AS query_time FROM user_query_log_temp where start_time ='$last_date'";
     $result2 = mysqli_query($conn, $sql_avg);
     $avgRow = mysqli_fetch_assoc($result2);
     $avg = $avgRow['query_time'];
 
 
     /***********total execution time*****************************/
-  $sql_sum="SELECT SEC_TO_TIME(Sum(TIME_TO_SEC(`query_time`))) AS query_time FROM user_query_log_temp where start_time ='$query_date'";
+  $sql_sum="SELECT SEC_TO_TIME(Sum(TIME_TO_SEC(`query_time`))) AS query_time FROM user_query_log_temp where start_time ='$last_date'";
   $result3 = mysqli_query($conn, $sql_sum);
   $totalRow = mysqli_fetch_assoc($result3);
   $total = $totalRow['query_time'];
@@ -57,21 +58,19 @@ for($x= 1;$x<=2;$x++){
   $rowcount2=mysqli_num_rows($result3);
     mysqli_free_result($result3);
 
-    $rowcount3=mysqli_num_rows($res2);
-      mysqli_free_result($res2);
+    $rowcount3=mysqli_num_rows($result2);
+      mysqli_free_result($result2);
     $tot_row = $rowcount2 +   $rowcount3 ;
 
-/$queryInsertQueryInfo = "INSERT INTO  queries_summary(start_time,q_num,avg_exe_time,tot_exe_time) VALUES ('$query_date','$tot_row','$avg','$total');";
+$queryInsertQueryInfo = "INSERT INTO  queries_summary(start_time,q_num,avg_exe_time,tot_exe_time) VALUES ('$query_date','$tot_row','$avg','$total');";
   $conn2->query($queryInsertQueryInfo);
 
   if(!$conn2->query($queryInsertQueryInfo)){
       echo "Insertion Failed: (" . $conn2->errno . ") " . $conn2->error;
   }
-$query_date ='2017-10-06';
+
 
 }
-
-<?php
 
 $conn->close();
 $conn2->close();

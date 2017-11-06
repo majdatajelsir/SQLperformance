@@ -1,11 +1,9 @@
-
 <?php
 $servername = "localhost";
 $username = "root";
 $password = "123456";
 $dbname = "mysql";
 $user_dbname ="";
-
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -53,11 +51,19 @@ $exec_time = $row["query_time"];
 $start_time = $row["start_time"];
 $lock_time = $row["lock_time"];
 $sql_text = $row["sql_text"];
+$sql_text2="";
+for($x=0;$x<strlen($sql_text);$x++){
+  if($sql_text[$x] != "'"){
+    $sql_text2.="$sql_text[$x]";
+  }
+}
+echo"$sql_text2";
+$exec_time="00:00:1.0001";
+$userTime ="00:00:1.0000";
+if (strtotime($exec_time)<strtotime($userTime)) {
 
-$ThatTime ="00:00:1.0000";
-if (strtotime($exec_time)<= strtotime($ThatTime)) {
 
-  $queryInsertQueryInfo = "INSERT INTO  user_query_log_temp(start_time,query_time,lock_time) VALUES ('$start_time','00:05:04:0000','$lock_time');";
+  $queryInsertQueryInfo = "INSERT INTO  user_query_log_temp(start_time,query_time,lock_time,sql_text) VALUES ('$start_time','$exec_time','$lock_time');";
 
 $conn->query($queryInsertQueryInfo);
 
@@ -65,6 +71,15 @@ if(!$conn->query($queryInsertQueryInfo)){
     echo "Insertion Failed: (" . $conn->errno . ") " . $conn->error;
 }
 
+}
+else{
+  $queryInsertQueryInfo = "INSERT INTO  user_slow_log(start_time,query_time,lock_time,sql_text) VALUES ('$start_time','$exec_time','$lock_time','$sql_text2');";
+
+$conn->query($queryInsertQueryInfo);
+
+if(!$conn->query($queryInsertQueryInfo)){
+    echo "Insertion Failed: (" . $conn->errno . ") " . $conn->error;
+}
 }
 
     }

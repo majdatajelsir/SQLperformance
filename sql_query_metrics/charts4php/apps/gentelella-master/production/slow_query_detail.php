@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Group erorr! | </title>
+    <title>Show all query|</title>
 
     <!-- Bootstrap -->
     <link href="../vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -15,14 +15,20 @@
     <link href="../vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
     <!-- NProgress -->
     <link href="../vendors/nprogress/nprogress.css" rel="stylesheet">
-    <!-- jQuery custom content scroller -->
-    <link href="../vendors/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css" rel="stylesheet"/>
+    <!-- iCheck -->
+    <link href="../vendors/iCheck/skins/flat/green.css" rel="stylesheet">
+    <!-- Datatables -->
+    <link href="../vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
+    <link href="../vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
+    <link href="../vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">
+    <link href="../vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
+    <link href="../vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom Theme Style -->
     <link href="../build/css/custom.min.css" rel="stylesheet">
   </head>
 
-  <body class="nav-md footer_fixed">
+  <body class="nav-md">
     <div class="container body">
       <div class="main_container">
         <div class="col-md-3 left_col">
@@ -46,56 +52,57 @@
             <!-- /menu profile quick info -->
 
             <br />
+
             <!-- sidebar menu -->
             <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
-              
+
               <div class="menu_section">
                 <h3>Services</h3>
-                
+
                 <ul class="nav side-menu">
                   <li><a><i class="fa fa-home"></i> Home <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
-                      	 <li><a href="home.html">Requisites</a></li>
+                     	  <li><a href="home.html">Requisites</a></li>
                     </ul>
                   </li>
-                  
+
                   <li><a><i class="fa fa-edit"></i> Sql Performance <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
-                      <li><a href="show all q.html">Show All Query</a></li>
-                      <li><a href="show slow q.html">Show Slow Query</a></li>
+                      <li><a href="show_all_q.php">Show All Query</a></li>
+                      <li><a href="show_slow_query.php">Show Slow Query</a></li>
                     </ul>
                   </li>
-                  
+
                   <li><a><i class="fa fa-desktop"></i> Code Profiler <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
                       <li><a href="memory leak.html">Memory Leak</a></li>
                       <li><a href="function ex.html">Function Execution</a></li>
                     </ul>
                   </li>
-                  
+
                   <li><a><i class="fa fa-table"></i> Erorr Tracking <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
-                      <li><a href="erorr rate .html">Show Erorr Rate</a></li>
-                      <li><a href="group erorr.html">Guroping Erorr</a></li>
+                    <li><a href="group_error.php"> Error Groups</a></li>
                     </ul>
                   </li>
-                  
+
                   <li><a><i class="fa fa-bar-chart-o"></i> Predection <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
                       <li><a href="predection.html">predection</a></li>
                     </ul>
                   </li>
-                  
-                  <li><a><i class="fa fa-clone"></i>Layouts <span class="fa fa-chevron-down"></span></a>
+
+                  <li><a><i class="fa fa-clone"></i>Visulaization<span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
-                      <li><a href="fixed_sidebar.html">Fixed Sidebar</a></li>
-                      <li><a href="fixed_footer.html">Fixed Footer</a></li>
+                      <li><a href="visul_normal_q.php">Normal Queries</a></li>
+                      <li><a href="visul_slow_query.php">Slow Queries</a></li>
                     </ul>
                   </li>
                 </ul>
               </div> <!-- end of section-->
             </div>   <!-- /sidebar menu -->
 
+            <!-- /sidebar menu -->
 
             <!-- /menu footer buttons -->
             <div class="sidebar-footer hidden-small">
@@ -210,7 +217,6 @@
               </ul>
             </nav>
           </div>
-
         </div>
         <!-- /top navigation -->
 
@@ -219,8 +225,142 @@
           <div class="">
             <div class="page-title">
               <div class="title_left">
-                <h3>Fixed Footer <small> Just add class <strong>footer_fixed</strong></small></h3>
+                <h3>Users <small>Some examples to get you started</small></h3>
               </div>
+              <form class="form-control" method="post" action="show_slow_query.php">
+              <div class="title_right">
+                <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+                  <div class="input-group">
+
+
+            <select class="form-control" name="topology" size="1">
+            <option value="1" selected>Last tow days
+            <option value="2">Last to weeks
+            <option value="3">Last tow months
+            </select>&nbsp;
+                    <span class="input-group-btn">
+                      <button class="btn btn-default" type="submit">Go!</button>
+                    </span>
+                  </div>
+                </div>
+              </div>
+              </form>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <div class="row">
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>Default Example <small>Users</small></h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+                      <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                        <ul class="dropdown-menu" role="menu">
+                          <li><a href="#">Settings 1</a>
+                          </li>
+                          <li><a href="#">Settings 2</a>
+                          </li>
+                        </ul>
+                      </li>
+                      <li><a class="close-link"><i class="fa fa-close"></i></a>
+                      </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+
+                  <div class="x_content">
+                    <?php
+                    $servername = "localhost";
+                    $username = "root";
+                    $password = "123456";
+                    $dbname = "mysql";
+                    $time_array =array();
+                    $date_array =array();
+                    $total_execution_time;
+                    $avg_execution_time;
+                    $conn = new mysqli($servername, $username, $password, $dbname);
+                    // Check connection
+                    if ($conn->connect_error) {
+                        die("Connection failed: " . $conn->connect_error);
+                    }
+
+                    $result;
+                    $variable=$_POST['topology'];
+                    $frist_date= date("Y-m-d",strtotime("-7 day"));
+                    $last_date= date("Y-m-d",strtotime("-9 day"));
+                    $sql = "SELECT * FROM user_slow_log ;";
+                    if(!$conn->query($sql)){
+                        echo "selection failed: (" . $conn->errno . ") " . $conn->error;
+                    }
+                    $result = $conn->query($sql);
+
+                    if($variable ==1){
+                      $frist_date= date("Y-m-d",strtotime("-7 day"));
+                      $last_date= date("Y-m-d",strtotime("-9 day"));
+                      $sql = "SELECT start_time ,query_time, lock_time, row_send,sql_text FROM user_slow_log where start_time ='$frist_date'  or start_time ='$last_date';";
+                      $result = $conn->query($sql);
+                    }
+                    if($variable ==2){
+                        $frist_date= date("Y-m-d ",strtotime("-1 day"));
+                        $last_date= date("Y-m-d ",strtotime("-14 day"));
+                        $sql = "SELECT start_time ,query_time, lock_time, row_send,sql_text FROM user_slow_log where start_time ='$frist_date'  or start_time ='$last_date';";
+                        $result = mysqli_query($conn, $sql);
+                    }
+                    if($variable ==3){
+                      $frist_date= date("Y-m-d",strtotime("-1 day"));
+                      $last_date= date("Y-m-d",strtotime("-60 day"));
+                      $sql = "SELECT start_time ,query_time, lock_time, row_send,sql_text FROM user_slow_log where start_time ='$frist_date'  or start_time ='$last_date';";
+                      $result = $conn->query($sql);
+                    }
+
+
+
+                    ?>
+                    <h3>Normal Queries Information</h3>
+
+                    <table id="datatable" class="table table-striped table-bordered">
+                      <thead>
+                        <tr>
+                          <th>Start Time</th>
+                          <th>query Time</th>
+                          <th>Lock Time</th>
+                          <th>Row Send</th>
+                          <th>SQL Text</th>
+                        </tr>
+                      </thead>
+                    <?php
+                    if ($result->num_rows > 0) {
+                        // output data of each row
+                        while($row = $result->fetch_assoc()) {
+                    $conn->close();
+                    ?>
+
+                      <tbody>
+                        <tr>
+                          <td><?php echo $row["start_time"];?></td>
+                          <td><?php echo $row["query_time"];?></td>
+                          <td><?php echo $row["lock_time"];?></td>
+                          <td><?php echo $row["row_send"];?></td>
+                          <td><?php echo $row["sql_text"];?></td>
+                        </tr>
+
+                      </tbody>
+                    <?php
+                  }
+                }
+                  ?>
+                </table>
+
+                  </div>
+                </div>
+              </div>
+
+
+
             </div>
           </div>
         </div>
@@ -246,10 +386,27 @@
     <script src="../vendors/fastclick/lib/fastclick.js"></script>
     <!-- NProgress -->
     <script src="../vendors/nprogress/nprogress.js"></script>
-    <!-- jQuery custom content scroller -->
-    <script src="../vendors/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js"></script>
+    <!-- iCheck -->
+    <script src="../vendors/iCheck/icheck.min.js"></script>
+    <!-- Datatables -->
+    <script src="../vendors/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="../vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+    <script src="../vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="../vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
+    <script src="../vendors/datatables.net-buttons/js/buttons.flash.min.js"></script>
+    <script src="../vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
+    <script src="../vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
+    <script src="../vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
+    <script src="../vendors/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
+    <script src="../vendors/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="../vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
+    <script src="../vendors/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
+    <script src="../vendors/jszip/dist/jszip.min.js"></script>
+    <script src="../vendors/pdfmake/build/pdfmake.min.js"></script>
+    <script src="../vendors/pdfmake/build/vfs_fonts.js"></script>
 
     <!-- Custom Theme Scripts -->
     <script src="../build/js/custom.min.js"></script>
+
   </body>
 </html>

@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Show all query|</title>
+    <title>Group error! | </title>
 
     <!-- Bootstrap -->
     <link href="../vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -15,20 +15,53 @@
     <link href="../vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
     <!-- NProgress -->
     <link href="../vendors/nprogress/nprogress.css" rel="stylesheet">
-    <!-- iCheck -->
-    <link href="../vendors/iCheck/skins/flat/green.css" rel="stylesheet">
-    <!-- Datatables -->
-    <link href="../vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
-    <link href="../vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
-    <link href="../vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">
-    <link href="../vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
-    <link href="../vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+    <!-- jQuery custom content scroller -->
+    <link href="../vendors/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css" rel="stylesheet"/>
 
     <!-- Custom Theme Style -->
     <link href="../build/css/custom.min.css" rel="stylesheet">
   </head>
 
-  <body class="nav-md">
+  <body class="nav-md footer_fixed">
+    <?php
+    $user_name=$_POST['user_name'];
+    $myfile = fopen("/var/log/apache2/error.log.1", "r") or die("Unable to open file!");
+    $error_types = array("Warning", "Parse", "Fatal");
+    $fatal_array= array();
+    $warning_array = array();
+    $parse_array=array();
+
+    while(!feof($myfile)) {
+    //  echo fgets($myfile) . "<br>";
+      $error_line = fgets($myfile);
+      $error_date = substr($error_line,1,19);
+      $error_msg  = substr($error_line,79,strlen($error_line));
+    //  echo "$error_line";
+              if (strpos( $error_line, "Fatal" ) !== false ){
+                array_push($fatal_array,$error_date,$error_msg );
+
+              }
+
+              if (strpos( $error_line, "Warning" ) !== false ){
+                array_push($warning_array,$error_date,$error_msg);
+
+              }
+
+              if (strpos( $error_line, "Parse" ) !== false ){
+                array_push($parse_array,$error_date,$error_msg);
+
+              }
+    }
+
+
+    for($x = 0; $x <sizeof($fatal_array) ; $x++){
+    echo "$fatal_array[$x]";
+    }
+
+
+
+    fclose($myfile);
+?>
     <div class="container body">
       <div class="main_container">
         <div class="col-md-3 left_col">
@@ -45,14 +78,14 @@
                 <img src="images/img.jpg" alt="..." class="img-circle profile_img">
               </div>
               <div class="profile_info">
+
                 <span>Welcome,</span>
-                <h2>John Doe</h2>
+                <h2></h2>
               </div>
             </div>
             <!-- /menu profile quick info -->
 
             <br />
-
             <!-- sidebar menu -->
             <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
 
@@ -62,7 +95,7 @@
                 <ul class="nav side-menu">
                   <li><a><i class="fa fa-home"></i> Home <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
-                     	  <li><a href="home.html">Requisites</a></li>
+                      	 <li><a href="home.html">Requisites</a></li>
                     </ul>
                   </li>
 
@@ -82,7 +115,7 @@
 
                   <li><a><i class="fa fa-table"></i> Erorr Tracking <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
-                    <li><a href="group_error.php"> Error Groups</a></li>
+                        <li><a href="group_error.php"> Error Groups</a></li>
                     </ul>
                   </li>
 
@@ -92,7 +125,7 @@
                     </ul>
                   </li>
 
-                  <li><a><i class="fa fa-clone"></i>Visulaization<span class="fa fa-chevron-down"></span></a>
+                  <li><a><i class="fa fa-clone"></i>Visulaization <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
                       <li><a href="visul_normal_q.php">Normal Queries</a></li>
                       <li><a href="visul_slow_query.php">Slow Queries</a></li>
@@ -102,7 +135,6 @@
               </div> <!-- end of section-->
             </div>   <!-- /sidebar menu -->
 
-            <!-- /sidebar menu -->
 
             <!-- /menu footer buttons -->
             <div class="sidebar-footer hidden-small">
@@ -134,7 +166,7 @@
               <ul class="nav navbar-nav navbar-right">
                 <li class="">
                   <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                    <img src="images/img.jpg" alt="">John Doe
+                    <img src="images/img.jpg" alt=""><?php echo $user_name?>
                     <span class=" fa fa-angle-down"></span>
                   </a>
                   <ul class="dropdown-menu dropdown-usermenu pull-right">
@@ -217,150 +249,151 @@
               </ul>
             </nav>
           </div>
+
         </div>
         <!-- /top navigation -->
 
         <!-- page content -->
         <div class="right_col" role="main">
-          <div class="">
-            <div class="page-title">
-              <div class="title_left">
-                <h3>Users <small>Some examples to get you started</small></h3>
-              </div>
-              <form class="form-control" method="post" action="show_slow_query.php">
-              <div class="title_right">
-                <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
-                  <div class="input-group">
-
-
-            <select class="form-control" name="topology" size="1">
-            <option value="1" selected>Last tow days
-            <option value="2">Last to weeks
-            <option value="3">Last tow months
-            </select>&nbsp;
-                    <span class="input-group-btn">
-                      <button class="btn btn-default" type="submit">Go!</button>
-                    </span>
-                  </div>
+          <div class="row">
+            <div class="col-md-8 col-sm-6 col-xs-12">
+              <div class="x_panel">
+                <div class="x_title">
+                  <h2>Fatal Errors<small>Sessions</small></h2>
+                  <ul class="nav navbar-right panel_toolbox">
+                    <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                    <li class="dropdown">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                      <ul class="dropdown-menu" role="menu">
+                        <li><a href="#">Settings 1</a>
+                        </li>
+                        <li><a href="#">Settings 2</a>
+                        </li>
+                      </ul>
+                    </li>
+                    <li><a class="close-link"><i class="fa fa-close"></i></a>
+                    </li>
+                  </ul>
+                  <div class="clearfix"></div>
                 </div>
-              </div>
-              </form>
-            </div>
+                <div class="x_content">
 
-            <div class="clearfix"></div>
-
-            <div class="row">
-              <div class="col-md-12 col-sm-12 col-xs-12">
-                <div class="x_panel">
-                  <div class="x_title">
-                    <h2>Default Example <small>Users</small></h2>
-                    <ul class="nav navbar-right panel_toolbox">
-                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                      </li>
-                      <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                        <ul class="dropdown-menu" role="menu">
-                          <li><a href="#">Settings 1</a>
-                          </li>
-                          <li><a href="#">Settings 2</a>
-                          </li>
-                        </ul>
-                      </li>
-                      <li><a class="close-link"><i class="fa fa-close"></i></a>
-                      </li>
-                    </ul>
-                    <div class="clearfix"></div>
-                  </div>
-
-                  <div class="x_content">
-                    <?php
-                    $servername = "localhost";
-                    $username = "root";
-                    $password = "123456";
-                    $dbname = "slow_db";
-                    $time_array =array();
-                    $date_array =array();
-                    $total_execution_time;
-                    $avg_execution_time;
-                    $conn = new mysqli($servername, $username, $password, $dbname);
-                    // Check connection
-                    if ($conn->connect_error) {
-                        die("Connection failed: " . $conn->connect_error);
-                    }
-
-                    $result;
-                    $variable=$_POST['topology'];
-                    $frist_date= date("Y-m-d",strtotime("-7 day"));
-                    $last_date= date("Y-m-d",strtotime("-9 day"));
-                    $sql = "SELECT start_time ,q_num, avg_exe_time, tot_exe_time FROM slow_queries_summary where start_time ='$frist_date'  or start_time ='$last_date';";
-                    $result = $conn->query($sql);
-
-                    if($variable ==1){
-                      $frist_date= date("Y-m-d",strtotime("-7 day"));
-                      $last_date= date("Y-m-d",strtotime("-9 day"));
-                      $sql = "SELECT start_time ,q_num, avg_exe_time, tot_exe_time FROM slow_queries_summary where start_time ='$frist_date'  or start_time ='$last_date';";
-                      $result = $conn->query($sql);
-                    }
-                    if($variable ==2){
-                        $frist_date= date("Y-m-d ",strtotime("-1 day"));
-                        $last_date= date("Y-m-d ",strtotime("-14 day"));
-                        $sql = "SELECT start_time,q_num, avg_exe_time, tot_exe_time  FROM slow_queries_summary WHERE  start_time BETWEEN '$last_date' and '$frist_date';";
-                        $result = mysqli_query($conn, $sql);
-                    }
-                    if($variable ==3){
-                      $frist_date= date("Y-m-d",strtotime("-1 day"));
-                      $last_date= date("Y-m-d",strtotime("-60 day"));
-                      $sql = "SELECT start_time ,q_num, avg_exe_time, tot_exe_time FROM slow_queries_summary WHERE  start_time BETWEEN '$last_date' and '$frist_date';";
-                      $result = $conn->query($sql);
-                    }
-
-
-
-                    ?>
-                    <h3>Normal Queries Information</h3>
-
-                    <table id="datatable" class="table table-striped table-bordered">
-                      <thead>
-                        <tr>
-                          <th>Start Time</th>
-                          <th>Queries Number</th>
-                          <th>Averge Execution Time</th>
-                          <th>Total Execution Time</th>
-                          <th>details</th>
-                        </tr>
-                      </thead>
-                    <?php
-                    if ($result->num_rows > 0) {
-                        // output data of each row
-                        while($row = $result->fetch_assoc()) {
-                    $conn->close();
-                    ?>
-
-                      <tbody>
-                        <tr>
-                          <td><?php echo $row["start_time"];?></td>
-                          <td><?php echo $row["q_num"];?></td>
-                          <td><?php echo $row["avg_exe_time"];?></td>
-                          <td><?php echo $row["tot_exe_time"];?></td>
-                          <td><a href="slow_query_detail.php">See More</a></td>
-
-
-                        </tr>
-
-                      </tbody>
-                    <?php
+                  <?php
+                  for($x = 0; $x <sizeof($fatal_array);){
+                  //echo "$fatal_array[$x]"."$fatal_array[$x++]"."<br>";
+                        $x=($x+2);
                   }
-                }
-                  ?>
-                </table>
 
-                  </div>
+
+
+
+                    ?>
                 </div>
               </div>
-
-
-
             </div>
+            <div class="col-md-4 col-sm-6 col-xs-12">
+              <div class="x_panel">
+                <div class="x_title">
+                  <h2>Errors Rate</h2>
+                  <ul class="nav navbar-right panel_toolbox">
+                    <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+
+                    <li><a class="close-link"><i class="fa fa-close"></i></a>
+                    </li>
+                  </ul>
+                  <div class="clearfix"></div>
+                </div>
+                <div class="x_content" >
+
+                  <?php
+                  $number_of_fatal_error = sizeof($fatal_array);
+                  $number_of_warning_error = sizeof($warning_array);
+                  $number_of_parse_error = sizeof($parse_array);
+                  $tottal_error = $number_of_fatal_error + $number_of_warning_error + $number_of_parse_error ;
+                  $fatal_rate = $number_of_warning_error/$tottal_error*100;
+                  $warning_rate = $number_of_fatal_error/$tottal_error*100;
+                  $parse_rate = $number_of_parse_error/$tottal_error*100;
+
+                  echo "Fatal Error: $fatal_rate". "<br>";
+                  echo "warning Error: $warning_rate". "<br>";
+                  echo "Parse Error :$parse_rate". "<br>";
+                  ?>
+                </div>
+              </div>
+            </div>
+          </div>
+            <div class="col-md-8 col-sm-6 col-xs-12">
+              <div class="x_panel">
+                <div class="x_title">
+                  <h2>Warning Errors<small>Sessions</small></h2>
+                  <ul class="nav navbar-right panel_toolbox">
+                    <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                    <li class="dropdown">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                      <ul class="dropdown-menu" role="menu">
+                        <li><a href="#">Settings 1</a>
+                        </li>
+                        <li><a href="#">Settings 2</a>
+                        </li>
+                      </ul>
+                    </li>
+                    <li><a class="close-link"><i class="fa fa-close"></i></a>
+                    </li>
+                  </ul>
+                  <div class="clearfix"></div>
+                </div>
+                <div class="x_content" style="height: 95px; overflow-y: scroll;">
+                 <?php
+
+
+                  echo "/*******************/";
+                  for($x = 0; $x <sizeof($warning_array); $x++){
+                  echo "$warning_array[$x]";
+                  }
+                  fclose($myfile);
+                 ?>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="col-md-8 col-sm-6 col-xs-12">
+              <div class="x_panel">
+                <div class="x_title">
+                  <h2>Parse Errors<small>Sessions</small></h2>
+                  <ul class="nav navbar-right panel_toolbox">
+                    <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                    <li class="dropdown">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                      <ul class="dropdown-menu" role="menu">
+                        <li><a href="#">Settings 1</a>
+                        </li>
+                        <li><a href="#">Settings 2</a>
+                        </li>
+                      </ul>
+                    </li>
+                    <li><a class="close-link"><i class="fa fa-close"></i></a>
+                    </li>
+                  </ul>
+                  <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                  <?php
+
+                  for($x = 0; $x <sizeof($parse_array) ; $x++){
+                  echo "$parse_array[$x]";
+                  }
+
+?>
+                </div>
+              </div>
+            </div>
+
+
           </div>
         </div>
         <!-- /page content -->
@@ -385,27 +418,10 @@
     <script src="../vendors/fastclick/lib/fastclick.js"></script>
     <!-- NProgress -->
     <script src="../vendors/nprogress/nprogress.js"></script>
-    <!-- iCheck -->
-    <script src="../vendors/iCheck/icheck.min.js"></script>
-    <!-- Datatables -->
-    <script src="../vendors/datatables.net/js/jquery.dataTables.min.js"></script>
-    <script src="../vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
-    <script src="../vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
-    <script src="../vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
-    <script src="../vendors/datatables.net-buttons/js/buttons.flash.min.js"></script>
-    <script src="../vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
-    <script src="../vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
-    <script src="../vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
-    <script src="../vendors/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
-    <script src="../vendors/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
-    <script src="../vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
-    <script src="../vendors/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
-    <script src="../vendors/jszip/dist/jszip.min.js"></script>
-    <script src="../vendors/pdfmake/build/pdfmake.min.js"></script>
-    <script src="../vendors/pdfmake/build/vfs_fonts.js"></script>
+    <!-- jQuery custom content scroller -->
+    <script src="../vendors/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js"></script>
 
     <!-- Custom Theme Scripts -->
     <script src="../build/js/custom.min.js"></script>
-
   </body>
 </html>

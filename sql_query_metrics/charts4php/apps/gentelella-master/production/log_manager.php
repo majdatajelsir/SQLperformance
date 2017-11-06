@@ -290,31 +290,14 @@
 
                     $result;
                     $variable=$_POST['topology'];
-                    $frist_date= date("Y-m-d",strtotime("-7 day"));
-                    $last_date= date("Y-m-d",strtotime("-9 day"));
-                    $sql = "SELECT start_time ,q_num, avg_exe_time, tot_exe_time FROM slow_queries_summary where start_time ='$frist_date'  or start_time ='$last_date';";
+                    $error_date= "Sun Nov 05 11:21:1";//date("Y-m-d");
+                    $err2=date($error_date,"2017-11-5");
+                    echo"$err2";
+                    $sql = "SELECT error_date ,error_client, error_msg FROM Error_log where error_date ='$error_date' ;";
+                    if(!$conn->query($queryCreateUsersTable2)){
+                        echo "Table creation failed: (" . $conn->errno . ") " . $conn->error;
+                    }
                     $result = $conn->query($sql);
-
-                    if($variable ==1){
-                      $frist_date= date("Y-m-d",strtotime("-7 day"));
-                      $last_date= date("Y-m-d",strtotime("-9 day"));
-                      $sql = "SELECT start_time ,q_num, avg_exe_time, tot_exe_time FROM slow_queries_summary where start_time ='$frist_date'  or start_time ='$last_date';";
-                      $result = $conn->query($sql);
-                    }
-                    if($variable ==2){
-                        $frist_date= date("Y-m-d ",strtotime("-1 day"));
-                        $last_date= date("Y-m-d ",strtotime("-14 day"));
-                        $sql = "SELECT start_time,q_num, avg_exe_time, tot_exe_time  FROM slow_queries_summary WHERE  start_time BETWEEN '$last_date' and '$frist_date';";
-                        $result = mysqli_query($conn, $sql);
-                    }
-                    if($variable ==3){
-                      $frist_date= date("Y-m-d",strtotime("-1 day"));
-                      $last_date= date("Y-m-d",strtotime("-60 day"));
-                      $sql = "SELECT start_time ,q_num, avg_exe_time, tot_exe_time FROM slow_queries_summary WHERE  start_time BETWEEN '$last_date' and '$frist_date';";
-                      $result = $conn->query($sql);
-                    }
-
-
 
                     ?>
                     <h3>Normal Queries Information</h3>
@@ -322,11 +305,10 @@
                     <table id="datatable" class="table table-striped table-bordered">
                       <thead>
                         <tr>
-                          <th>Start Time</th>
-                          <th>Queries Number</th>
-                          <th>Averge Execution Time</th>
-                          <th>Total Execution Time</th>
-                          <th>details</th>
+                          <th>Error Date</th>
+                          <th>Error Client</th>
+                          <th>Error message</th>
+
                         </tr>
                       </thead>
                     <?php
@@ -338,11 +320,10 @@
 
                       <tbody>
                         <tr>
-                          <td><?php echo $row["start_time"];?></td>
-                          <td><?php echo $row["q_num"];?></td>
-                          <td><?php echo $row["avg_exe_time"];?></td>
-                          <td><?php echo $row["tot_exe_time"];?></td>
-                          <td><a href="slow_query_detail.php">See More</a></td>
+                          <td><?php echo $row["error_date"];?></td>
+                          <td><?php echo $row["error_client"];?></td>
+                          <td><?php echo $row["error_msg"];?></td>
+
 
 
                         </tr>
@@ -350,6 +331,9 @@
                       </tbody>
                     <?php
                   }
+                }
+                else{
+                  echo "No Data";
                 }
                   ?>
                 </table>
